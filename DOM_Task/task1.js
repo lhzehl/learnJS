@@ -48,3 +48,5 @@ for (let i = 0; i < href.length; i++) {
     console.log(href[i], href[i].href);
   }
 }
+// const filteredLinks = [...document.links].filter(a => !a.closest('ul'));
+// console.log(filteredLinks);

@@ -1,7 +1,7 @@
 const tasks = [
   {
     _id: "5d2ca9e2e03d40b326596aa7",
-    completed: true,
+    completed: false,
     body:
       "Occaecat non ea quis occaecat ad culpa amet deserunt incididunt elit fugiat pariatur. Exercitation commodo culpa in veniam proident laboris in. Excepteur cupidatat eiusmod dolor consectetur exercitation nulla aliqua veniam fugiat irure mollit. Eu dolor dolor excepteur pariatur aute do do ut pariatur consequat reprehenderit deserunt.\r\n",
     title: "Eu ea incididunt sunt consectetur fugiat non.",
@@ -30,12 +30,83 @@ const tasks = [
       "Deserunt laborum id consectetur pariatur veniam occaecat occaecat tempor voluptate pariatur nulla reprehenderit ipsum.",
   },
 ];
+//! Filter by complited
+function displayAllTask() {
+  const AllTask = document.querySelectorAll("li");
+  AllTask.forEach((element) => {
+    element.classList.remove("d-md-none");
+  });
+}
+
+function displayComplitedTask() {
+  const notComplited = [...document.querySelectorAll("li")].filter((a) =>
+    a.closest(".completed")
+  );
+  notComplited.forEach((element) => {
+    element.classList.add("d-md-none");
+  });
+  console.log(notComplited);
+}
+const divs = document.querySelector(".tasks-list-section");
+
+const showAllTaskButton = document.createElement("button");
+showAllTaskButton.classList.add(
+  "btn",
+  "btn-info",
+  "mr-auto",
+  "mt-auto",
+  "mb-auto",
+  "all-btn"
+);
+showAllTaskButton.addEventListener("click", displayAllTask);
+showAllTaskButton.textContent = "Show All Task";
+
+const showCompletedTaskButton = document.createElement("button");
+showCompletedTaskButton.classList.add(
+  "btn",
+  "btn-secondary",
+  "mr-auto",
+  "mt-auto",
+  "mb-auto",
+  "complited-btn"
+);
+showCompletedTaskButton.addEventListener("click", displayComplitedTask);
+showCompletedTaskButton.textContent = "Show UnComplited Task";
+
+divs.insertAdjacentElement("afterbegin", showCompletedTaskButton);
+divs.insertAdjacentElement("afterbegin", showAllTaskButton);
+//! Sort by Uncomplited
+function sortTask() {
+  tasksAll = document.querySelectorAll("li");
+  tasksAll.forEach((element) => {
+    if (element.classList.contains("completed")) {
+      element.parentNode.insertBefore(tasksAll[tasksAll.length-1], element);
+      // element.parentNode.insertBefore(tasksAll.item(element).nextElementSibling, element)
+      console.log(tasksAll.item(element).nextElementSibling);
+    }
+  });
+}
+
+// ! Check tasks
+// let llli = document.querySelectorAll("li")
+function checkli() {
+  if (document.querySelectorAll("li").length) {
+    p = document.querySelector(".notask");
+    if (p) {
+      p.remove();
+    }
+  }
+  if (!document.querySelectorAll("li").length) {
+    p = document.createElement("p");
+    ul = document.querySelector("ul");
+    p.textContent = "no task";
+    p.classList.add("notask");
+    ul.appendChild(p);
+    return ul;
+  }
+}
 //! To GET
 (function (arrOfTasks) {
-  if (!tasks.length) {
-    console.error("no task list");
-    return;
-  }
   const objectOftasks = arrOfTasks.reduce((acc, task) => {
     acc[task._id] = task;
     return acc;
@@ -53,17 +124,16 @@ const tasks = [
 
   //! Events
   renderAllTask(objectOftasks);
+  sortTask();
+  checkli();
+  //? Post
   form.addEventListener("submit", onFormSubmitHandler);
+  //? Delete
   listContainer.addEventListener("click", onDeleteHandler);
-  //? update
+  //? Update
   listContainer.addEventListener("click", onUpdateHandler);
-  //   listContainer.addEventListener("click", confirmUpdate);
 
   function renderAllTask(tasksList) {
-    if (!tasksList) {
-      console.error("No task list");
-      return;
-    }
     const fragment = document.createDocumentFragment();
     Object.values(tasksList).forEach((task) => {
       const li = listItemTemplate(task);
@@ -72,7 +142,7 @@ const tasks = [
     listContainer.appendChild(fragment);
   }
 
-  function listItemTemplate({ _id, title, body } = {}) {
+  function listItemTemplate({ _id, title, body, completed } = {}) {
     const li = document.createElement("li");
     li.classList.add(
       "list-group-item",
@@ -81,20 +151,38 @@ const tasks = [
       "flex-wrap",
       "mt-2"
     );
+    if (!!completed) {
+      li.classList.add("completed");
+    }
     li.setAttribute("data-task-id", _id);
-
+    //? task title
     const span = document.createElement("span");
     span.textContent = title;
     span.style.fontWeight = "bold";
-
+    //? Delete task button
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete task";
     deleteBtn.classList.add("btn", "btn-danger", "ml-auto", "delete-btn");
-
+    //* Update task button
     const updateBtn = document.createElement("button");
     updateBtn.textContent = "Update task";
     updateBtn.classList.add("btn", "btn-success", "mr-auto", "update-btn");
+    // ! Complited checkbox
+    const completeBtn = document.createElement("input");
+    completeBtn.type = "checkbox";
+    completeBtn.name = "complite";
+    completeBtn.id = `check-${_id}`;
+    if (!!completed) {
+      completeBtn.checked = true;
+    }
+    //! Event on complited checkbox
+    completeBtn.addEventListener("change", compliteFunction);
 
+    //? complited checkbox title
+    const completeBtnTitle = document.createElement("label");
+    completeBtnTitle.htmlFor = `check-${_id}`;
+    completeBtnTitle.appendChild(document.createTextNode(`complited?`));
+    //? task body
     const article = document.createElement("p");
     article.textContent = body;
     article.classList.add("mt-2", "w-100");
@@ -103,7 +191,10 @@ const tasks = [
 
     li.appendChild(deleteBtn);
     li.appendChild(updateBtn);
+
     li.appendChild(article);
+    li.appendChild(completeBtn);
+    li.appendChild(completeBtnTitle);
 
     return li;
   }
@@ -120,6 +211,7 @@ const tasks = [
     const task = createNewTask(titleValue, bodyValue);
     const listItem = listItemTemplate(task);
     listContainer.insertAdjacentElement("afterbegin", listItem);
+    checkli();
     form.reset();
   }
 
@@ -152,6 +244,7 @@ const tasks = [
       const id = parent.dataset.taskId;
       const confirmed = deleteTask(id);
       deleteTaskFromHtml(parent, confirmed);
+      checkli();
     }
   }
   //! To UPDATE
@@ -222,5 +315,9 @@ const tasks = [
         newForm.remove();
       };
     }
+  }
+  function compliteFunction({ target }) {
+    target.parentElement.classList.toggle("completed");
+    sortTask();
   }
 })(tasks);
