@@ -47,6 +47,7 @@ function displayComplitedTask() {
   });
   console.log(notComplited);
 }
+
 const divs = document.querySelector(".tasks-list-section");
 
 const showAllTaskButton = document.createElement("button");
@@ -80,15 +81,13 @@ function sortTask() {
   tasksAll = document.querySelectorAll("li");
   tasksAll.forEach((element) => {
     if (element.classList.contains("completed")) {
-      element.parentNode.insertBefore(tasksAll[tasksAll.length-1], element);
-      // element.parentNode.insertBefore(tasksAll.item(element).nextElementSibling, element)
-      console.log(tasksAll.item(element).nextElementSibling);
+      element.parentNode.insertBefore(element, tasksAll[tasksAll.length]);
     }
   });
 }
 
 // ! Check tasks
-// let llli = document.querySelectorAll("li")
+
 function checkli() {
   if (document.querySelectorAll("li").length) {
     p = document.querySelector(".notask");
@@ -111,8 +110,90 @@ function checkli() {
     acc[task._id] = task;
     return acc;
   }, {});
-  // console.log(objectOftasks);
-  // * Elements UI
+  //? themes
+  const themes = {
+    default: {
+      "--base-text-color": "#212529",
+      "--header-bg": "#007bff",
+      "--completed-bg": "blueviolet",
+      "--header-text-color": "#fff",
+      "--default-btn-bg": "#007bff",
+      "--default-btn-text-color": "#fff",
+      "--default-btn-hover-bg": "#0069d9",
+      "--default-btn-border-color": "#0069d9",
+      "--danger-btn-bg": "#dc3545",
+      "--danger-btn-text-color": "#fff",
+      "--danger-btn-hover-bg": "#bd2130",
+      "--danger-btn-border-color": "#dc3545",
+      "--success-btn-bg": "mediumseagreen",
+      "--success-btn-text-color": "#fff",
+      "--success-btn-hover-bg": "green",
+      "--success-btn-border-color": "mediumseagreen",
+      "--input-border-color": "#ced4da",
+      "--input-bg-color": "#fff",
+      "--input-text-color": "#495057",
+      "--input-focus-bg-color": "#fff",
+      "--input-focus-text-color": "#495057",
+      "--input-focus-border-color": "#80bdff",
+      "--input-focus-box-shadow": "0 0 0 0.2rem rgba(0, 123, 255, 0.25)",
+    },
+    dark: {
+      "--base-text-color": "#212529",
+      "--header-bg": "#343a40",
+      "--completed-bg": "cadetblue",
+      "--header-text-color": "#fff",
+      "--default-btn-bg": "#58616b",
+      "--default-btn-text-color": "#fff",
+      "--default-btn-hover-bg": "#292d31",
+      "--default-btn-border-color": "#343a40",
+      "--default-btn-focus-box-shadow":
+        "0 0 0 0.2rem rgba(141, 143, 146, 0.25)",
+      "--danger-btn-bg": "#b52d3a",
+      "--danger-btn-text-color": "#fff",
+      "--danger-btn-hover-bg": "#88222c",
+      "--danger-btn-border-color": "#88222c",
+      "--success-btn-bg": "darkolivegreen",
+      "--success-btn-text-color": "#fff",
+      "--success-btn-hover-bg": "darkgreen",
+      "--success-btn-border-color": "darkolivegreen",
+      "--input-border-color": "#ced4da",
+      "--input-bg-color": "#fff",
+      "--input-text-color": "#495057",
+      "--input-focus-bg-color": "#fff",
+      "--input-focus-text-color": "#495057",
+      "--input-focus-border-color": "#78818a",
+      "--input-focus-box-shadow": "0 0 0 0.2rem rgba(141, 143, 146, 0.25)",
+    },
+    light: {
+      "--base-text-color": "#212529",
+      "--header-bg": "#fff",
+      "--completed-bg": "aquamarine",
+      "--header-text-color": "#212529",
+      "--default-btn-bg": "#fff",
+      "--default-btn-text-color": "#212529",
+      "--default-btn-hover-bg": "#e8e7e7",
+      "--default-btn-border-color": "#343a40",
+      "--default-btn-focus-box-shadow":
+        "0 0 0 0.2rem rgba(141, 143, 146, 0.25)",
+      "--danger-btn-bg": "#f1b5bb",
+      "--danger-btn-text-color": "#212529",
+      "--danger-btn-hover-bg": "#ef808a",
+      "--danger-btn-border-color": "#e2818a",
+      "--success-btn-bg": "lightgreen",
+      "--success-btn-text-color": "#fff",
+      "--success-btn-hover-bg": "lime",
+      "--success-btn-border-color": "lightgreen",
+      "--input-border-color": "#ced4da",
+      "--input-bg-color": "#fff",
+      "--input-text-color": "#495057",
+      "--input-focus-bg-color": "#fff",
+      "--input-focus-text-color": "#495057",
+      "--input-focus-border-color": "#78818a",
+      "--input-focus-box-shadow": "0 0 0 0.2rem rgba(141, 143, 146, 0.25)",
+    },
+  };
+  let lastSelectedTheme = localStorage.getItem("app_theme") || "default";
+  // ! Elements UI
 
   const form = document.forms["addTask"];
   const inputTitle = form.elements["title"];
@@ -121,18 +202,23 @@ function checkli() {
   const listContainer = document.querySelector(
     ".tasks-list-section .list-group"
   );
+  const themeSelect = document.getElementById("themeSelect");
 
   //! Events
+  setThame(lastSelectedTheme);
+  themeSelect.value = lastSelectedTheme;
   renderAllTask(objectOftasks);
   sortTask();
   checkli();
-  //? Post
+  //* Post
   form.addEventListener("submit", onFormSubmitHandler);
-  //? Delete
+  //* Delete
   listContainer.addEventListener("click", onDeleteHandler);
-  //? Update
+  //* Update
   listContainer.addEventListener("click", onUpdateHandler);
-
+  //* Theme select
+  themeSelect.addEventListener("change", onThemeSelectHandler);
+  //! Render Task
   function renderAllTask(tasksList) {
     const fragment = document.createDocumentFragment();
     Object.values(tasksList).forEach((task) => {
@@ -155,15 +241,15 @@ function checkli() {
       li.classList.add("completed");
     }
     li.setAttribute("data-task-id", _id);
-    //? task title
+    //! task title
     const span = document.createElement("span");
     span.textContent = title;
     span.style.fontWeight = "bold";
-    //? Delete task button
+    //! Delete task button
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete task";
     deleteBtn.classList.add("btn", "btn-danger", "ml-auto", "delete-btn");
-    //* Update task button
+    //! Update task button
     const updateBtn = document.createElement("button");
     updateBtn.textContent = "Update task";
     updateBtn.classList.add("btn", "btn-success", "mr-auto", "update-btn");
@@ -319,5 +405,29 @@ function checkli() {
   function compliteFunction({ target }) {
     target.parentElement.classList.toggle("completed");
     sortTask();
+  }
+
+  //! to change theme
+
+  function onThemeSelectHandler(e) {
+    const selectedTheme = themeSelect.value;
+    const isConfirmed = confirm(
+      ` Are you sure to change theme ${selectedTheme}`
+    );
+    if (!isConfirmed) {
+      themeSelect.value = lastSelectedTheme;
+      return;
+    }
+    setThame(selectedTheme);
+    lastSelectedTheme = selectedTheme;
+    localStorage.setItem("app_theme", selectedTheme);
+  }
+
+  function setThame(name) {
+    const selectedThemObj = themes[name];
+    Object.entries(selectedThemObj).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
+    
   }
 })(tasks);
