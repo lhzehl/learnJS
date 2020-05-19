@@ -1,12 +1,3 @@
-// console.log(1);
-
-// console.log(2);
-
-// setTimeout(() => {
-//   console.log(3);
-// }, 0);
-// console.log(4);
-
 const btn = document.querySelector(".btn-get-post");
 const btnAddPost = document.querySelector(".btn-add-post");
 const container = document.querySelector(".container");
