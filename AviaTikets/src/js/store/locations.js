@@ -18,8 +18,8 @@ class Locations {
     return response;
   }
 
-  getCiteCodeByKey(key){
-    return this.cities[key].code
+  getCiteCodeByKey(key) {
+    return this.cities[key].code;
   }
 
   createShortCitiesList(cities) {
@@ -27,7 +27,7 @@ class Locations {
     //
     return Object.entries(cities).reduce((acc, [key]) => {
       acc[key] = null;
-      return acc
+      return acc;
     }, {});
   }
 
@@ -52,9 +52,9 @@ class Locations {
   getCountryNameByCode(code) {
     return this.countries[code].name;
   }
-
-  getCitiesByCountryCode(code) {
-    return this.cities.filter((city) => city.country_code === code);
+  async fetchTikets(params) {
+    const response = await this.api.prices(params);
+    console.log(response);
   }
 }
 
