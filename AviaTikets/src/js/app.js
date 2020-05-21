@@ -2,6 +2,7 @@ import "../css/style.css";
 import "./plugins";
 import locations from "./store/locations";
 import formUI from "./views/form";
+import tiketsUI from './views/tikets'
 import currencyUI from "./views/currency";
 
 // locations.init().then((res) => {
@@ -32,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const return_date = formUI.returnDateValue;
     const currency = currencyUI.currencyValue;
     // City_code origin, city_code department, date YYYY-MM
-    console.log(origin, destination, depart_date, return_date, currency);
+
     // complite all data and send on server
     await locations.fetchTikets({
       origin,
@@ -41,5 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return_date,
       currency,
     });
+    console.log(locations.lastSeach)
   }
 });
