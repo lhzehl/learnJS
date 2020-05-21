@@ -22,7 +22,7 @@ class Api {
   }
   async cities() {
     try {
-      const response = await axios.get(`${this.url}/countries`);
+      const response = await axios.get(`${this.url}/cities`);
       return response.data
     } catch (err) {
       console.log(err);
