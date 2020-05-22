@@ -119,7 +119,10 @@ function addNewTicketsToFavorite(data) {
   return fragment;
 }
 function onDelete({ target }) {
-  console.log(target);
+
+  const el = target.closest('.favorite-item')
+
+  el.remove()
 }
 
 function FavoriteHandler({ target }) {
