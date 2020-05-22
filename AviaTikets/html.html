@@ -84,7 +84,7 @@
       </div>
     </div>-->
     
-    <!-- <div class="tickets-sections">
+<div class="tickets-sections">
       <div class="container">
         <div class="row">
           <div class="tickets-empty-res-msg">
@@ -123,4 +123,47 @@
           </div>
         </div>
       </div>
-    </div>  -->
+    </div> 
+
+
+    <div class="favorite-item  d-flex align-items-start" id="f${data.id}">
+      <img
+        src="${data.img}"
+        class="favorite-item-airline-img"
+      />
+      <div class="favorite-item-info d-flex flex-column">
+        <div
+          class="favorite-item-destination d-flex align-items-center"
+        >
+          <div class="d-flex align-items-center mr-auto">
+            <span class="favorite-item-city">${data.origin_name} </span>
+            <i class="medium material-icons">flight_takeoff</i>
+          </div>
+          <div class="d-flex align-items-center">
+            <i class="medium material-icons">flight_land</i>
+            <span class="favorite-item-city">${data.destination_name}</span>
+          </div>
+        </div>
+        <div class="ticket-time-price d-flex align-items-center">
+          <span class="ticket-time-departure">${data.data}</span>
+          <span class="ticket-price ml-auto">${data.price}</span>
+        </div>
+        <div class="ticket-additional-info">
+          <span class="ticket-transfers">${data.transfers}</span>
+          <span class="ticket-flight-number">${data.flight_number}</span>
+        </div>
+        <a
+          class="waves-effect waves-light btn-small pink darken-3 delete-favorite ml-auto"
+          >Delete</a
+        >
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+

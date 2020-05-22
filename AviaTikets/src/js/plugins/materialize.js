@@ -31,3 +31,6 @@ M.Datepicker.init(datepicker, {
 export function getDatepickerInstance(elem) {
   return M.Datepicker.getInstance(elem);
 }
+// Init dropdown
+const dropdowns = document.querySelectorAll('.dropdown-trigger');
+M.Dropdown.init(dropdowns);

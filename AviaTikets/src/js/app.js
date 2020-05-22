@@ -2,23 +2,22 @@ import "../css/style.css";
 import "./plugins";
 import locations from "./store/locations";
 import formUI from "./views/form";
-import tiketsUI from './views/tikets'
+import tiсketsUI from "./views/tikets";
 import currencyUI from "./views/currency";
+import ticketsUI from "./views/tikets";
+import addToFavoriteUI from "./store/favorites";
 
-// locations.init().then((res) => {
-//   console.log(res);
-//   console.log(locations)
-//   // console.log(locations.getCitiesByCountryCode())
-// });
 document.addEventListener("DOMContentLoaded", () => {
   //* init app
   initApp();
+
   const form = formUI.form;
   //Events
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     onFormSubmit();
   });
+
   //Handlers
   async function initApp() {
     await locations.init();
@@ -42,6 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return_date,
       currency,
     });
-    console.log(locations.lastSeach)
+    // console.log(locations.lastSeach)
+    ticketsUI.renderTickets(
+      locations.lastSeach,
+      currencyUI.getcurrencySymbol()
+    );
+    addToFavoriteUI.action(ticketsUI.container)
   }
 });

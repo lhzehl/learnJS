@@ -11,6 +11,7 @@ class Locations {
     this.lastSeach = {};
     this.airlines = {};
     this.formatDate = helpers.formatDate;
+    
   }
   async init() {
     const response = await Promise.all([
@@ -102,8 +103,11 @@ class Locations {
         destination_name: this.getCityNameByCode(ticket.destination),
         airline_logo: this.getAirlineLogoByCode(ticket.airline),
         airline_name: this.getAirlineNameByCode(ticket.airline),
+        id:  this.formatDate(ticket.departure_at, "t")+ticket.flight_number,
+
         departure_at: this.formatDate(ticket.departure_at, "dd MMM yyyy hh:mm"),
         return_at: this.formatDate(ticket.return_at, "dd MMM yyyy hh:mm"),
+      
       };
     });
   }
